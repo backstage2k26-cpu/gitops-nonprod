@@ -1,0 +1,21 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: goodmrng-dev
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/devops-champ/goodmrng.git
+    targetRevision: HEAD
+    path: helm
+    helm:
+      valueFiles:
+        - ../../values/goodmrng/values-dev.yaml
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: goodmrng-dev
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
