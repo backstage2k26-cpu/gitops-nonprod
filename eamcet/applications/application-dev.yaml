@@ -1,0 +1,21 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: eamcet-dev
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/devops-champ/eamcet.git
+    targetRevision: HEAD
+    path: helm
+    helm:
+      valueFiles:
+        - ../../values/eamcet/values-dev.yaml
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: eamcet-dev
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
