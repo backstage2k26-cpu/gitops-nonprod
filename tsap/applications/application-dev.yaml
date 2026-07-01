@@ -1,0 +1,21 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: tsap-dev
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/devops-champ/tsap.git
+    targetRevision: HEAD
+    path: helm
+    helm:
+      valueFiles:
+        - ../../values/tsap/values-dev.yaml
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: tsap-dev
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
