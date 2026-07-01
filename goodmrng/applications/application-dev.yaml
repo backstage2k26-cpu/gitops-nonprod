@@ -1,21 +1,82 @@
-apiVersion: argoproj.io/v1alpha1
-kind: Application
+---
+# Source: helmtest/templates/serviceaccount.yaml
+apiVersion: v1
+kind: ServiceAccount
 metadata:
-  name: goodmrng-dev
-  namespace: argocd
+  name: helmtest
+  labels:
+    helm.sh/chart: helmtest-0.1.0
+    app.kubernetes.io/name: helmtest
+    app.kubernetes.io/instance: helmtest
+    app.kubernetes.io/managed-by: Helm
+automountServiceAccountToken: true
+
+---
+# Source: helmtest/templates/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: helmtest
+  labels:
+    helm.sh/chart: helmtest-0.1.0
+    app.kubernetes.io/name: helmtest
+    app.kubernetes.io/instance: helmtest
+    app.kubernetes.io/managed-by: Helm
 spec:
-  project: default
-  source:
-    repoURL: https://github.com/devops-champ/goodmrng.git
-    targetRevision: HEAD
-    path: helm
-    helm:
-      valueFiles:
-        - ../../values/goodmrng/values-dev.yaml
-  destination:
-    server: https://kubernetes.default.svc
-    namespace: goodmrng-dev
-  syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
+  type: ClusterIP
+  ports:
+    - port: 80
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    app.kubernetes.io/name: helmtest
+    app.kubernetes.io/instance: helmtest
+
+---
+# Source: helmtest/templates/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: helmtest
+  labels:
+    helm.sh/chart: helmtest-0.1.0
+    app.kubernetes.io/name: helmtest
+    app.kubernetes.io/instance: helmtest
+    app.kubernetes.io/managed-by: Helm
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: helmtest
+      app.kubernetes.io/instance: helmtest
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: helmtest
+        app.kubernetes.io/instance: helmtest
+    spec:
+      serviceAccountName: helmtest
+      containers:
+        - name: helmtest
+          image: "backstage2026/helmtest:0.0.2"
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: "dev"
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /actuator/health/liveness
+              port: http
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /actuator/health/readiness
+              port: http
+            initialDelaySeconds: 10
+            periodSeconds: 10
