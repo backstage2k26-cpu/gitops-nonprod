@@ -45,23 +45,26 @@ jobs:
           location: ${{ secrets.GKE_LOCATION }}
           project_id: ${{ secrets.GCP_PROJECT }}
 
-      - name: Debug Repository
+      - name: Find Application Manifests
+        id: apps
         run: |
-          echo "===== Current Repository ====="
-          pwd
-      
-          echo ""
-          echo "===== Files ====="
-          find .
-      
-          echo ""
-          echo "===== Application manifests ====="
-          find . -path "*/applications/*.yaml"
-            - name: Exit if No New Applications
-              if: steps.apps.outputs.files == ''
-              run: |
-                echo "No new ArgoCD applications found."
-                exit 0
+
+          APPS=$(find . -path "*/applications/*.yaml")
+
+          echo "Detected application manifests:"
+          echo "$APPS"
+
+          {
+            echo "files<<EOF"
+            echo "$APPS"
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Exit if No New Applications
+        if: steps.apps.outputs.files == ''
+        run: |
+          echo "No new ArgoCD applications found."
+          exit 0
 
       - name: Validate GitOps Structure
         if: steps.apps.outputs.files != ''
