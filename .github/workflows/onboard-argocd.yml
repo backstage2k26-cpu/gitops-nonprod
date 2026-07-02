@@ -218,25 +218,14 @@ jobs:
               --plaintext \
               --insecure >/dev/null 2>&1
             then
-              echo "Application already exists. Skipping..."
-              continue
+              echo "❌ ArgoCD Application '$APP_NAME' already exists."
+              echo "Choose a different application name."
+              exit 1
             fi
 
             echo "Creating ArgoCD Application..."
 
             kubectl apply -f "$FILE"
-
-            echo "Waiting for Application to become Healthy..."
-
-            argocd app wait "$APP_NAME" \
-              --server "$ARGOCD_SERVER" \
-              --auth-token "$ARGOCD_AUTH_TOKEN" \
-              --grpc-web \
-              --plaintext \
-              --insecure \
-              --sync \
-              --health \
-              --timeout 600
 
             echo "✅ $APP_NAME successfully onboarded."
 
