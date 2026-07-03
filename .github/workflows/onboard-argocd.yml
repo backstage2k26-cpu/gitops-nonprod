@@ -89,10 +89,22 @@ jobs:
               exit 1
             fi
 
-            if [ ! -f "$SERVICE/values/values-dev.yaml" ]; then
-              echo "❌ Missing values file:"
-              echo "$SERVICE/values/values-dev.yaml"
-              exit 1
+            APP_NAME=$(yq '.metadata.name' "$FILE")
+
+            if [[ "$APP_NAME" =~ -(dev|qa|prod)$ ]]; then
+                ENVIRONMENT="${BASH_REMATCH[1]}"
+            else
+                echo "❌ Unable to determine environment from application name:"
+                echo "$APP_NAME"
+                exit 1
+            fi
+
+            VALUES_FILE="$SERVICE/values/values-${ENVIRONMENT}.yaml"
+
+            if [ ! -f "$VALUES_FILE" ]; then
+                echo "❌ Missing values file:"
+                echo "$VALUES_FILE"
+                exit 1
             fi
 
             echo "✅ GitOps structure validated."
@@ -178,7 +190,7 @@ jobs:
 
             APP_NAME=$(yq '.metadata.name' "$FILE")
 
-            COUNT=$(grep -R "name: $APP_NAME" . | wc -l)
+            COUNT=$(find . -path "*/applications/*.yaml" -exec grep -h "name: $APP_NAME" {} \; | wc -l)
 
             if [ "$COUNT" -gt 1 ]; then
               echo "❌ Duplicate ArgoCD Application detected:"
