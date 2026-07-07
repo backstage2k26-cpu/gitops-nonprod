@@ -3,7 +3,6 @@ kind: Application
 metadata:
   name: market-dev
   namespace: argocd
-  
   annotations:
     notifications.argoproj.io/subscribe.on-sync-succeeded.devlake: devlake-webhook-success
     notifications.argoproj.io/subscribe.on-sync-failed.devlake: devlake-webhook-failure
