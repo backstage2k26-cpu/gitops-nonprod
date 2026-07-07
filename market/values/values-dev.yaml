@@ -1,4 +1,4 @@
 replicaCount: 1
 image:
-  tag: 0.0.11
+  tag: 0.0.10
   repository: backstage2026/market
