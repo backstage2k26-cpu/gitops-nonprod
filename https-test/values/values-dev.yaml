@@ -1,4 +1,4 @@
 replicaCount: 1
 image:
-  tag: 0.0.2
+  tag: 0.0.3
   repository: backstage2026/https-test
