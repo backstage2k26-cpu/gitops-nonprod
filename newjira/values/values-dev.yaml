@@ -1,4 +1,4 @@
 replicaCount: 1
-
 image:
-  tag: latest
+  tag: 0.0.2
+  repository: backstage2026/newjira
