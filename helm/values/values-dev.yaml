@@ -1,4 +1,4 @@
 replicaCount: 1
 image:
-  tag: 0.0.5
-  repository: backstage2026/helm
+  tag: 0.0.2
+  repository: backstage2026/jiratest-01
