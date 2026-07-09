@@ -7,13 +7,13 @@ spec:
   project: default
   sources:
     - repoURL: https://github.com/devops-champ/nextking.git
-      targetRevision: 0.0.3
+      targetRevision: 0.0.4
       path: helm/app
       helm:
         valueFiles:
           - $values/nextking/values/values-dev.yaml
     - repoURL: https://github.com/backstage2k26-cpu/gitops-nonprod.git
-      targetRevision: 0.0.3
+      targetRevision: 0.0.4
       ref: values
   destination:
     server: https://kubernetes.default.svc
