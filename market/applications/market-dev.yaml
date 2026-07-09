@@ -10,7 +10,7 @@ spec:
   project: default
   sources:
     - repoURL: https://github.com/devops-champ/market.git
-      targetRevision: main
+      targetRevision: v0.018
       path: helm/app
       helm:
         valueFiles:
