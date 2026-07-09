@@ -1,0 +1,34 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+
+metadata:
+  name: newjira-dev
+  namespace: argocd
+
+spec:
+  project: default
+
+  sources:
+    - repoURL: https://github.com/devops-champ/newjira.git
+      targetRevision: HEAD
+      path: helm/app
+
+      helm:
+        valueFiles:
+          - $values/newjira/values/values-dev.yaml
+
+    - repoURL: https://github.com/backstage2k26-cpu/gitops-nonprod.git
+      targetRevision: main
+      ref: values
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: newjira-dev
+
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+
+    syncOptions:
+      - CreateNamespace=true
