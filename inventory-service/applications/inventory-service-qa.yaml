@@ -10,7 +10,7 @@ spec:
 
   sources:
     - repoURL: https://github.com/devops-champ/inventory-service.git
-      targetRevision: 0.0.7
+      targetRevision: 0.0.8
       path: helm/app
 
       helm:
