@@ -1,34 +1,26 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
-
 metadata:
   name: inventory-service-dev
   namespace: argocd
-
 spec:
   project: default
-
   sources:
     - repoURL: https://github.com/devops-champ/inventory-service.git
-      targetRevision: HEAD
+      targetRevision: 0.0.4
       path: helm/app
-
       helm:
         valueFiles:
           - $values/inventory-service/values/values-dev.yaml
-
     - repoURL: https://github.com/backstage2k26-cpu/gitops-nonprod.git
-      targetRevision: main
+      targetRevision: 0.0.4
       ref: values
-
   destination:
     server: https://kubernetes.default.svc
     namespace: inventory-service-dev
-
   syncPolicy:
     automated:
       prune: true
       selfHeal: true
-
     syncOptions:
       - CreateNamespace=true
