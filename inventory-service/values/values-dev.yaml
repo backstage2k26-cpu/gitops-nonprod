@@ -1,4 +1,4 @@
 replicaCount: 1
 image:
-  tag: 0.0.7
+  tag: 0.0.8
   repository: backstage2026/inventory-service
