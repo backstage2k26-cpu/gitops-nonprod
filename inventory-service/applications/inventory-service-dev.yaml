@@ -7,13 +7,13 @@ spec:
   project: default
   sources:
     - repoURL: https://github.com/devops-champ/inventory-service.git
-      targetRevision: 0.0.4
+      targetRevision: 0.0.5
       path: helm/app
       helm:
         valueFiles:
           - $values/inventory-service/values/values-dev.yaml
     - repoURL: https://github.com/backstage2k26-cpu/gitops-nonprod.git
-      targetRevision: 0.0.4
+      targetRevision: 0.0.5
       ref: values
   destination:
     server: https://kubernetes.default.svc
