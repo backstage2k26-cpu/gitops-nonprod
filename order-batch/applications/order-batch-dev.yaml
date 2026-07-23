@@ -1,34 +1,26 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
-
 metadata:
   name: order-batch-dev
   namespace: argocd
-
 spec:
   project: default
-
   sources:
     - repoURL: https://github.com/devops-champ/order-batch.git
-      targetRevision: HEAD
+      targetRevision: 0.0.2
       path: helm/app
-
       helm:
         valueFiles:
           - $values/order-batch/values/values-dev.yaml
-
     - repoURL: https://github.com/backstage2k26-cpu/gitops-nonprod.git
       targetRevision: main
       ref: values
-
   destination:
     server: https://kubernetes.default.svc
     namespace: order-batch-dev
-
   syncPolicy:
     automated:
       prune: true
       selfHeal: true
-
     syncOptions:
       - CreateNamespace=true
