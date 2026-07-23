@@ -7,7 +7,7 @@ spec:
   project: default
   sources:
     - repoURL: https://github.com/devops-champ/order-batch.git
-      targetRevision: 0.0.2
+      targetRevision: 0.0.3
       path: helm/app
       helm:
         valueFiles:
