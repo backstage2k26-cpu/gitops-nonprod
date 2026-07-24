@@ -1,0 +1,34 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+
+metadata:
+  name: jbibioo-dev
+  namespace: argocd
+
+spec:
+  project: default
+
+  sources:
+    - repoURL: https://github.com/devops-champ/jbibioo.git
+      targetRevision: HEAD
+      path: helm/app
+
+      helm:
+        valueFiles:
+          - $values/jbibioo/values/values-dev.yaml
+
+    - repoURL: https://github.com/backstage2k26-cpu/gitops-nonprod.git
+      targetRevision: main
+      ref: values
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: jbibioo-dev
+
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+
+    syncOptions:
+      - CreateNamespace=true
