@@ -10,7 +10,7 @@ spec:
 
   sources:
     - repoURL: https://github.com/devops-champ/inventory-batch.git
-      targetRevision: 0.0.8
+      targetRevision: 0.0.9
       path: helm/app
 
       helm:
